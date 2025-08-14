@@ -7,45 +7,67 @@ import {
   PieChart, 
   LineChart, 
   Calendar,
-  ExternalLink
+  ExternalLink,
+  RefreshCw
 } from "lucide-react";
 import dataImage from "@/assets/data-analytics.jpg";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface EconomicData {
+  title: string;
+  source: string;
+  date: string;
+  value: string;
+  trend: "up" | "down";
+  description: string;
+}
 
 const ResearchHub = () => {
-  const researchData = [
-    {
-      title: "Índice Nacional de Preços ao Consumidor (IPCA)",
-      source: "IBGE",
-      date: "Dezembro 2024",
-      value: "4.83%",
-      trend: "up",
-      description: "Inflação acumulada em 12 meses mantém-se dentro da meta estabelecida pelo Banco Central."
-    },
-    {
-      title: "Pesquisa Industrial Mensal (PIM-PF)",
-      source: "IBGE", 
-      date: "Novembro 2024",
-      value: "+2.1%",
-      trend: "up",
-      description: "Produção industrial apresenta crescimento em relação ao mês anterior."
-    },
-    {
-      title: "Pesquisa Mensal de Emprego (PME)",
-      source: "IBGE",
-      date: "Dezembro 2024", 
-      value: "7.2%",
-      trend: "down",
-      description: "Taxa de desemprego mantém tendência de queda no último trimestre de 2024."
-    },
-    {
-      title: "Índice de Confiança do Consumidor",
-      source: "FGV",
-      date: "Janeiro 2025",
-      value: "89.4",
-      trend: "up", 
-      description: "Confiança do consumidor apresenta melhora significativa no início de 2025."
+  const [researchData, setResearchData] = useState<EconomicData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string>("");
+
+  const fetchEconomicData = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase.functions.invoke('fetch-economic-data');
+      
+      if (error) {
+        console.error('Erro ao buscar dados econômicos:', error);
+        // Fallback para dados de exemplo em caso de erro
+        setResearchData([
+          {
+            title: "Dados indisponíveis temporariamente",
+            source: "Sistema",
+            date: new Date().toLocaleDateString('pt-BR'),
+            value: "N/A",
+            trend: "up" as const,
+            description: "Erro ao conectar com as fontes de dados. Tente novamente em alguns minutos."
+          }
+        ]);
+        return;
+      }
+
+      if (data?.success && data?.data) {
+        setResearchData(data.data);
+        setLastUpdated(data.lastUpdated);
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchEconomicData();
+    
+    // Atualizar dados a cada 6 horas
+    const interval = setInterval(fetchEconomicData, 6 * 60 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const categories = [
     { name: "Economia", icon: TrendingUp, count: 12 },
@@ -107,15 +129,39 @@ const ResearchHub = () => {
             {/* Research Data */}
             <div className="lg:col-span-2">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold">Dados Recentes</h3>
-                <Button variant="outline" size="sm">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Ver Histórico
-                </Button>
+                <div>
+                  <h3 className="text-xl font-semibold">Dados Recentes</h3>
+                  {lastUpdated && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Última atualização: {new Date(lastUpdated).toLocaleString('pt-BR')}
+                    </p>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={fetchEconomicData}
+                    disabled={isLoading}
+                  >
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                    Atualizar
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Ver Histórico
+                  </Button>
+                </div>
               </div>
 
               <div className="space-y-4">
-                {researchData.map((data, index) => (
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <RefreshCw className="h-6 w-6 animate-spin text-primary" />
+                    <span className="ml-2 text-muted-foreground">Carregando dados oficiais...</span>
+                  </div>
+                ) : (
+                  researchData.map((data, index) => (
                   <Card key={index} className="bg-gradient-card border-0 shadow-card hover:shadow-elegant transition-all duration-300">
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
@@ -148,7 +194,8 @@ const ResearchHub = () => {
                       </p>
                     </CardContent>
                   </Card>
-                ))}
+                  ))
+                )}
               </div>
 
               <div className="mt-8 text-center">
