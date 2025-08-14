@@ -23,7 +23,7 @@ const News = () => {
     },
     {
       category: "Inovação", 
-      title: "Inteligência Artificial na Pesquisa de Mercado: Tendências 2025",
+      title: "PRODADOS E INTELIGÊNCIA ARTIFICIAL NA PESQUISA DE MERCADO",
       excerpt: "Como a IA está revolucionando a coleta e análise de dados, proporcionando insights mais precisos e em tempo real para as decisões estratégicas.",
       date: "12 Jan 2025",
       readTime: "4 min",

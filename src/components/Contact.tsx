@@ -15,7 +15,7 @@ import {
   Send,
   Building2
 } from "lucide-react";
-import partnershipImage from "@/assets/business-partnership.jpg";
+import partnershipImage from "@/assets/business-handshake.jpg";
 
 const Contact = () => {
   const { toast } = useToast();
