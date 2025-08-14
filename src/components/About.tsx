@@ -103,7 +103,7 @@ const About = () => {
                   </div>
                   <p className="opacity-90">
                     Capacidade de transformar análises em ações de mercado que geram vendas e rentabilidade, 
-                    com tecnologia própria (Sistema Sphinx) e operação em todo território nacional.
+                    com tecnologia própria e operação em todo território nacional.
                   </p>
                 </CardContent>
               </Card>
