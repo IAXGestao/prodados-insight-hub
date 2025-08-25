@@ -43,7 +43,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             <a href="#inicio" className="text-foreground hover:text-primary transition-colors font-medium">
               Início
             </a>
@@ -55,6 +55,12 @@ const Header = () => {
             </a>
             <a href="#pesquisas" className="text-foreground hover:text-primary transition-colors font-medium">
               Hub de Pesquisas
+            </a>
+            <a href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium">
+              Conteúdo Gratuito
+            </a>
+            <a href="/dados-publicos" className="text-foreground hover:text-primary transition-colors font-medium">
+              Dados Públicos
             </a>
             <a href="#noticias" className="text-foreground hover:text-primary transition-colors font-medium">
               Notícias
@@ -90,6 +96,12 @@ const Header = () => {
               </a>
               <a href="#pesquisas" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
                 Hub de Pesquisas
+              </a>
+              <a href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+                Conteúdo Gratuito
+              </a>
+              <a href="/dados-publicos" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+                Dados Públicos
               </a>
               <a href="#noticias" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
                 Notícias
