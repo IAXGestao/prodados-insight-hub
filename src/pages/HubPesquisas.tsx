@@ -33,6 +33,13 @@ const HubPesquisas = () => {
   useEffect(() => {
     fetchCategories();
     fetchDatasets();
+    
+    // Check URL parameters for category
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('categoria');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
   }, []);
 
   const fetchCategories = async () => {
@@ -371,7 +378,13 @@ const HubPesquisas = () => {
                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
                   Nossa equipe pode desenvolver pesquisas customizadas para atender suas necessidades específicas.
                 </p>
-                <Button size="lg" onClick={() => document.getElementById('contato')?.scrollIntoView()}>
+                <Button size="lg" onClick={() => {
+                  if (window.location.pathname === '/') {
+                    document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    window.location.href = '/#contato';
+                  }
+                }}>
                   Solicitar Pesquisa Customizada
                 </Button>
               </CardContent>

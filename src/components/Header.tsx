@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,8 +13,48 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleNavClick = (sectionId: string) => {
+    if (isHomePage) {
+      // Se estiver na página inicial, apenas faça scroll
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Se estiver em outra página, vá para a página inicial e depois faça scroll
+      window.location.href = `/#${sectionId}`;
+    }
+  };
+
+  const NavLink = ({ href, sectionId, children, className = "" }: { 
+    href?: string; 
+    sectionId?: string; 
+    children: React.ReactNode; 
+    className?: string;
+  }) => {
+    if (href) {
+      return (
+        <Link to={href} className={`text-foreground hover:text-primary transition-colors font-medium ${className}`}>
+          {children}
+        </Link>
+      );
+    }
+    
+    if (sectionId) {
+      return (
+        <button 
+          onClick={() => handleNavClick(sectionId)}
+          className={`text-foreground hover:text-primary transition-colors font-medium ${className}`}
+        >
+          {children}
+        </button>
+      );
+    }
+    
+    return <span className={className}>{children}</span>;
+  };
 
   return (
     <header className="w-full bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50">
@@ -42,78 +83,97 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              PRODADOS
-            </h1>
-            <span className="ml-2 text-sm text-muted-foreground hidden sm:block">
-              Pesquisa & Insight Hub
-            </span>
+            <Link to="/" className="flex items-center">
+              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                PRODADOS
+              </h1>
+              <span className="ml-2 text-sm text-muted-foreground hidden sm:block">
+                Pesquisa & Insight Hub
+              </span>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList className="space-x-6">
               <NavigationMenuItem>
-                <NavigationMenuLink href="#inicio" className="text-foreground hover:text-primary transition-colors font-medium">
+                <NavLink sectionId="inicio">
                   Início
-                </NavigationMenuLink>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink href="#sobre" className="text-foreground hover:text-primary transition-colors font-medium">
+                <NavLink sectionId="sobre">
                   Sobre
-                </NavigationMenuLink>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink href="#servicos" className="text-foreground hover:text-primary transition-colors font-medium">
+                <NavLink sectionId="servicos">
                   Serviços
-                </NavigationMenuLink>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-foreground hover:text-primary transition-colors font-medium bg-transparent">
                   Hub de Pesquisas
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="w-80 p-4">
+                <NavigationMenuContent className="z-50">
+                  <div className="w-80 p-4 bg-background border border-border rounded-lg shadow-lg">
                     <div className="grid gap-3">
-                      <NavigationMenuLink href="/hub-pesquisas" className="block p-3 hover:bg-accent rounded-lg transition-colors">
-                        <div className="font-medium mb-1">Ver Todas as Pesquisas</div>
-                        <div className="text-sm text-muted-foreground">Explore nossa base completa de dados</div>
+                      <NavigationMenuLink asChild>
+                        <Link to="/hub-pesquisas" className="block p-3 hover:bg-accent rounded-lg transition-colors">
+                          <div className="font-medium mb-1">Ver Todas as Pesquisas</div>
+                          <div className="text-sm text-muted-foreground">Explore nossa base completa de dados</div>
+                        </Link>
                       </NavigationMenuLink>
                       <div className="border-b my-2"></div>
+                      <NavLink sectionId="pesquisas" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                        Hub na Página Inicial
+                      </NavLink>
                       <div className="text-sm font-medium text-muted-foreground mb-2">Categorias Principais:</div>
-                      <NavigationMenuLink href="/hub-pesquisas?categoria=demografia" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
-                        Demografia e População
+                      <NavigationMenuLink asChild>
+                        <Link to="/hub-pesquisas?categoria=demografia" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                          Demografia e População
+                        </Link>
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="/hub-pesquisas?categoria=economia" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
-                        Economia e Renda
+                      <NavigationMenuLink asChild>
+                        <Link to="/hub-pesquisas?categoria=economia" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                          Economia e Renda
+                        </Link>
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="/hub-pesquisas?categoria=educacao" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
-                        Educação
+                      <NavigationMenuLink asChild>
+                        <Link to="/hub-pesquisas?categoria=educacao" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                          Educação
+                        </Link>
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="/hub-pesquisas?categoria=saude" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
-                        Saúde e Qualidade de Vida
+                      <NavigationMenuLink asChild>
+                        <Link to="/hub-pesquisas?categoria=saude" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                          Saúde e Qualidade de Vida
+                        </Link>
                       </NavigationMenuLink>
                     </div>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium">
+                <NavLink href="/conteudo-gratuito">
                   Conteúdo Gratuito
-                </NavigationMenuLink>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink href="/dados-publicos" className="text-foreground hover:text-primary transition-colors font-medium">
+                <NavLink href="/dados-publicos">
                   Dados Públicos
-                </NavigationMenuLink>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink href="#noticias" className="text-foreground hover:text-primary transition-colors font-medium">
+                <NavLink sectionId="noticias">
                   Notícias
-                </NavigationMenuLink>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Button variant="default" size="sm" onClick={() => document.getElementById('contato')?.scrollIntoView()}>
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  onClick={() => handleNavClick('contato')}
+                >
                   Contato
                 </Button>
               </NavigationMenuItem>
@@ -135,31 +195,72 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t">
             <nav className="flex flex-col space-y-4">
-              <a href="#inicio" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              <button 
+                onClick={() => {
+                  handleNavClick('inicio');
+                  toggleMenu();
+                }}
+                className="text-foreground hover:text-primary transition-colors font-medium text-left"
+              >
                 Início
-              </a>
-              <a href="#sobre" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              </button>
+              <button 
+                onClick={() => {
+                  handleNavClick('sobre');
+                  toggleMenu();
+                }}
+                className="text-foreground hover:text-primary transition-colors font-medium text-left"
+              >
                 Sobre
-              </a>
-              <a href="#servicos" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              </button>
+              <button 
+                onClick={() => {
+                  handleNavClick('servicos');
+                  toggleMenu();
+                }}
+                className="text-foreground hover:text-primary transition-colors font-medium text-left"
+              >
                 Serviços
-              </a>
-              <a href="/hub-pesquisas" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              </button>
+              <Link 
+                to="/hub-pesquisas" 
+                className="text-foreground hover:text-primary transition-colors font-medium" 
+                onClick={toggleMenu}
+              >
                 Hub de Pesquisas
-              </a>
-              <a href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              </Link>
+              <Link 
+                to="/conteudo-gratuito" 
+                className="text-foreground hover:text-primary transition-colors font-medium" 
+                onClick={toggleMenu}
+              >
                 Conteúdo Gratuito
-              </a>
-              <a href="/dados-publicos" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              </Link>
+              <Link 
+                to="/dados-publicos" 
+                className="text-foreground hover:text-primary transition-colors font-medium" 
+                onClick={toggleMenu}
+              >
                 Dados Públicos
-              </a>
-              <a href="#noticias" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              </Link>
+              <button 
+                onClick={() => {
+                  handleNavClick('noticias');
+                  toggleMenu();
+                }}
+                className="text-foreground hover:text-primary transition-colors font-medium text-left"
+              >
                 Notícias
-              </a>
-              <Button variant="default" size="sm" className="w-fit" onClick={() => {
-                document.getElementById('contato')?.scrollIntoView();
-                toggleMenu();
-              }}>
+              </button>
+              <Button 
+                variant="default" 
+                size="sm" 
+                className="w-fit" 
+                onClick={() => {
+                  handleNavClick('contato');
+                  toggleMenu();
+                }}
+              >
                 Contato
               </Button>
             </nav>
