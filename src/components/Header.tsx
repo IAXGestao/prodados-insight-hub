@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone, Mail } from "lucide-react";
+import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,32 +51,74 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <a href="#inicio" className="text-foreground hover:text-primary transition-colors font-medium">
-              Início
-            </a>
-            <a href="#sobre" className="text-foreground hover:text-primary transition-colors font-medium">
-              Sobre
-            </a>
-            <a href="#servicos" className="text-foreground hover:text-primary transition-colors font-medium">
-              Serviços
-            </a>
-            <a href="#pesquisas" className="text-foreground hover:text-primary transition-colors font-medium">
-              Hub de Pesquisas
-            </a>
-            <a href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium">
-              Conteúdo Gratuito
-            </a>
-            <a href="/dados-publicos" className="text-foreground hover:text-primary transition-colors font-medium">
-              Dados Públicos
-            </a>
-            <a href="#noticias" className="text-foreground hover:text-primary transition-colors font-medium">
-              Notícias
-            </a>
-            <Button variant="default" size="sm" onClick={() => document.getElementById('contato')?.scrollIntoView()}>
-              Contato
-            </Button>
-          </nav>
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList className="space-x-6">
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#inicio" className="text-foreground hover:text-primary transition-colors font-medium">
+                  Início
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#sobre" className="text-foreground hover:text-primary transition-colors font-medium">
+                  Sobre
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#servicos" className="text-foreground hover:text-primary transition-colors font-medium">
+                  Serviços
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-foreground hover:text-primary transition-colors font-medium bg-transparent">
+                  Hub de Pesquisas
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-80 p-4">
+                    <div className="grid gap-3">
+                      <NavigationMenuLink href="/hub-pesquisas" className="block p-3 hover:bg-accent rounded-lg transition-colors">
+                        <div className="font-medium mb-1">Ver Todas as Pesquisas</div>
+                        <div className="text-sm text-muted-foreground">Explore nossa base completa de dados</div>
+                      </NavigationMenuLink>
+                      <div className="border-b my-2"></div>
+                      <div className="text-sm font-medium text-muted-foreground mb-2">Categorias Principais:</div>
+                      <NavigationMenuLink href="/hub-pesquisas?categoria=demografia" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                        Demografia e População
+                      </NavigationMenuLink>
+                      <NavigationMenuLink href="/hub-pesquisas?categoria=economia" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                        Economia e Renda
+                      </NavigationMenuLink>
+                      <NavigationMenuLink href="/hub-pesquisas?categoria=educacao" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                        Educação
+                      </NavigationMenuLink>
+                      <NavigationMenuLink href="/hub-pesquisas?categoria=saude" className="block p-2 hover:bg-accent rounded-lg transition-colors text-sm">
+                        Saúde e Qualidade de Vida
+                      </NavigationMenuLink>
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium">
+                  Conteúdo Gratuito
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/dados-publicos" className="text-foreground hover:text-primary transition-colors font-medium">
+                  Dados Públicos
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="#noticias" className="text-foreground hover:text-primary transition-colors font-medium">
+                  Notícias
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Button variant="default" size="sm" onClick={() => document.getElementById('contato')?.scrollIntoView()}>
+                  Contato
+                </Button>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
           {/* Mobile menu button */}
           <Button
@@ -94,7 +144,7 @@ const Header = () => {
               <a href="#servicos" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
                 Serviços
               </a>
-              <a href="#pesquisas" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
+              <a href="/hub-pesquisas" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
                 Hub de Pesquisas
               </a>
               <a href="/conteudo-gratuito" className="text-foreground hover:text-primary transition-colors font-medium" onClick={toggleMenu}>
