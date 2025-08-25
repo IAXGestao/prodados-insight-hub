@@ -44,6 +44,130 @@ export type Database = {
         }
         Relationships: []
       }
+      research_categories: {
+        Row: {
+          color: string
+          created_at: string
+          description: string | null
+          icon: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          description?: string | null
+          icon: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string | null
+          icon?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      research_data: {
+        Row: {
+          created_at: string
+          data: Json
+          dataset_id: string
+          id: string
+          last_updated: string
+          period: string | null
+          region: string | null
+        }
+        Insert: {
+          created_at?: string
+          data: Json
+          dataset_id: string
+          id?: string
+          last_updated?: string
+          period?: string | null
+          region?: string | null
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          dataset_id?: string
+          id?: string
+          last_updated?: string
+          period?: string | null
+          region?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_data_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "research_datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_datasets: {
+        Row: {
+          api_endpoint: string | null
+          category_id: string
+          created_at: string
+          description: string
+          id: string
+          metadata: Json | null
+          source: string
+          source_url: string | null
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          api_endpoint?: string | null
+          category_id: string
+          created_at?: string
+          description: string
+          id?: string
+          metadata?: Json | null
+          source: string
+          source_url?: string | null
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          api_endpoint?: string | null
+          category_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          metadata?: Json | null
+          source?: string
+          source_url?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_datasets_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "research_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string

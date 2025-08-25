@@ -54,3 +54,6 @@ ip_version = "ipv4"
 
 [functions.fetch-economic-data]
 verify_jwt = false
+
+[functions.fetch-research-data]
+verify_jwt = false
